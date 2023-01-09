@@ -1,0 +1,20 @@
+{
+  "name": "@aiueb/fflogs",
+  "version": "1.0.0",
+  "description": "",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "rm -rf node_modules && tsc",
+    "test": "jest --no-cache"
+  },
+  "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@aiueb/auth": "^1.0.0",
+    "@types/needle": "^3.2.0"
+  },
+  "dependencies": {
+    "needle": "^3.2.0"
+  }
+}
