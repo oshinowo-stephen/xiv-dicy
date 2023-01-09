@@ -1,6 +1,6 @@
 {
   "name": "@aiueb/fflogs",
-  "version": "1.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -11,7 +11,7 @@
   "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@aiueb/auth": "^1.0.0",
+    "@aiueb/auth": "^0.1.0-alpha.0",
     "@types/needle": "^3.2.0"
   },
   "dependencies": {
