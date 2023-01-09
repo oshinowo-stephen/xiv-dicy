@@ -15,5 +15,10 @@
   },
   "devDependencies": {
     "@types/needle": "^3.2.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "11695708fde5fd0c08f70dd9a0c80de35d199a21"
 }
