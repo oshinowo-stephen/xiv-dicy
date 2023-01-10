@@ -1,10 +1,5 @@
 import http from 'needle'
 
-const {
-  FF_LOGS_CLIENT_ID,
-  FF_LOGS_CLIENT_SEC,
-} = process.env
-
 class RequestError extends Error {
   public readonly reason: string
   public readonly error: string
@@ -23,7 +18,7 @@ class RequestError extends Error {
 export const loadTokenToEnv = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     http.post('https://www.fflogs.com/oauth/token',
-      `grant_type=client_credentials&client_id=${FF_LOGS_CLIENT_ID}&client_secret=${FF_LOGS_CLIENT_SEC}`,
+      `grant_type=client_credentials&client_id=${process.env.FF_LOGS_CLIENT_ID}&client_secret=${process.env.FF_LOGS_CLIENT_SEC}`,
       (error, response) => {
         if (error) {
           reject(new RequestError(error.message, error.name))
