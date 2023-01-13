@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@hephaestus/eris": "^1.0.0-alpha.9",
+    "@aiueb/auth": "^0.1.1-alpha.3",
+    "@aiueb/fflogs": "^0.1.1-alpha.0",
+    "@aiueb/utils": "^0.1.1-alpha.0",
+    "@aiueb/verify": "^0.1.1-alpha.0",
+    "@hephaestus/eris": "^1.0.0-alpha.22",
     "config": "^3.3.8"
   },
   "devDependencies": {
-    "@types/dotenv": "^8.2.0",
-    "dotenv": "^16.0.3"
+    "@types/config": "^3.3.0",
+    "prisma": "^4.8.1"
   }
 }
