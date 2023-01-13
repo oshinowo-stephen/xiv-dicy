@@ -6,7 +6,7 @@ interface LoadstoneCharacter {
 
 export const verifyCharacter = (key: string, charURI: string): Promise<void> => {
     const charURL = new URL(charURI)
-    const charID = charURL.pathname.split('/')[2]
+    const charID = charURL.pathname.split('/')[3]
 
     return new Promise((resolve, reject) => {
         needle.get(`https://xivapi.com/character/${charID}`, (error,  response) => {

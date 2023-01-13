@@ -5,7 +5,7 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "rm -rf node_modules && tsc",
+    "build": "rm -rf ./dist && tsc",
     "test": "jest --no-cache"
   },
   "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
