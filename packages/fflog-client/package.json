@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "test": "jest --no-cache"
+    "test": "ava"
   },
   "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
   "license": "MIT",

@@ -1,8 +1,9 @@
+import test from 'ava'
+
 import { loadTokenToEnv } from './'
 
-test('token in env?', async () => {
+test('token in env?', async (t) => {
     await loadTokenToEnv()
 
-    expect(process.env.FF_LOGS_TOKEN !== undefined)
-        .toBeTruthy()
+    t.truthy(process.env.FF_LOGS_TOKEN !== undefined)
 })

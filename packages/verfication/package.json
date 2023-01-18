@@ -1,24 +1,33 @@
 {
   "name": "@aiueb/verify",
-  "version": "0.2.0-alpha.0",
+  "version": "0.2.0-alpha.1",
   "description": "",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "test": "jest --no-cache"
+    "test": "ava"
   },
   "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@types/needle": "^3.2.0"
-  },
   "dependencies": {
-    "needle": "^3.2.0"
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^2.6.7"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "gitHead": "11695708fde5fd0c08f70dd9a0c80de35d199a21"
+  "gitHead": "11695708fde5fd0c08f70dd9a0c80de35d199a21",
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.2"
+  }
 }
