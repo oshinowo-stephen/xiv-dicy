@@ -9,14 +9,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@aiueb/auth": "^0.2.0-alpha.0",
-    "@aiueb/fflogs": "^0.2.0-alpha.0",
-    "@aiueb/utils": "^0.2.0-alpha.0",
-    "@aiueb/verify": "^0.2.0-alpha.1",
+    "@aiueb/auth": "^1.0.0-alpha.0",
+    "@aiueb/fflogs": "^1.0.0-alpha.0",
+    "@aiueb/utils": "^1.0.0-alpha.0",
+    "@aiueb/verify": "^1.0.0-alpha.1",
     "@hephaestus/eris": "^1.0.0-alpha.22",
-    "@types/randomstring": "^1.1.8",
-    "config": "^3.3.8",
-    "randomstring": "^1.2.3"
+    "config": "^3.3.8"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",

@@ -1,0 +1,13 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource storage {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Player {
+    id String @unique
+    verified_char String
+}

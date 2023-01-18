@@ -1,7 +1,11 @@
 import { createCommand } from '@hephaestus/eris'
 import { verifyCharacter } from '@aiueb/verify'
-import { sleep } from '@aiueb/utils'
-import { generate } from 'randomstring'
+import { 
+    sleep, 
+    timeouts,
+    randomString, 
+    createTimeout,
+} from '@aiueb/utils'
 
 const tryToVerify = async (key: string, url: string, tries: number): Promise<boolean> => {
     try {
@@ -36,8 +40,15 @@ export default createCommand({
     ],
     description: 'Verify your characters!',
     action: async (interaction, args): Promise<void> => {
+        if (timeouts.has(interaction.member.id)) {
+            return interaction.createMessage({
+                content: 'You\'re in process of this command already! Try again later...',
+                flags: 64
+            })
+        }
+
         let tries: number = 0
-        const key = `aiuebxiv-${generate()}`
+        const key = `aiuebxiv-${randomString(28)}`
 
         interaction.createMessage({
             content: `
@@ -45,6 +56,8 @@ Key generated: \`${key}\`, paste this in your character bio!
             `,
             flags: 64,
         })
+
+        createTimeout(interaction.member.id, (60 * 1000))
 
         const verified = await tryToVerify(key, args['char_link'].value, tries)
 
