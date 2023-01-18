@@ -1,6 +1,6 @@
 import { createCommand } from '@hephaestus/eris'
 import { verifyCharacter } from '@aiueb/verify'
-import {} from '@aiueb/utils'
+import { sleep } from '@aiueb/utils'
 import { generate } from 'randomstring'
 
 const tryToVerify = async (key: string, url: string, tries: number): Promise<boolean> => {
