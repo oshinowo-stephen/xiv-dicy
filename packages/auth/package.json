@@ -1,6 +1,6 @@
 {
   "name": "@aiueb/auth",
-  "version": "0.2.0-alpha.0",
+  "version": "1.0.0-alpha.0",
   "description": "Loads authorization tokens and codes into the env from fflogs.",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
