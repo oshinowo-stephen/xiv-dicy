@@ -10,8 +10,6 @@ const {
 if (!NODE_ENV || NODE_ENV !== 'prod') {
     const path = resolve(process.cwd(), '../.env')
 
-    console.log(path)
-
     config({ path })
 } else {
     load()
