@@ -1,6 +1,6 @@
 {
   "name": "@aiueb/verify",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -11,7 +11,7 @@
   "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@aiueb/verify": "^1.0.3",
+    "@aiueb/verify": "^1.1.0",
     "cheerio": "^1.0.0-rc.12",
     "node-fetch": "^2.6.7"
   },

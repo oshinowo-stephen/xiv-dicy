@@ -1,9 +1,6 @@
 import needle, { NeedleResponse } from 'needle'
 
-import {
-    CharacterZoneQuery,
-    CharacterEncounterQuery
-} from './schemas'
+import { CharacterZoneQuery } from './schemas'
 
 function processRequest(body: QueryRequest): Promise<NeedleResponse> {
     return new Promise((res, rej) => {
@@ -44,24 +41,6 @@ export const getCharZoneRanks = async (name: string, slug: string, region: strin
         .character
         .zoneRankings
         .rankings as ZoneRanking[]
-}
-
-export const getEncounterCharRanks = async (name: string, slug: string, region: string, enounterID: number): Promise<any> => {
-    const response = await processRequest({
-        query: CharacterEncounterQuery,
-        variables: {
-            name,
-            slug,
-            region,
-            encounter: enounterID
-        }
-    })
-
-    if (response.statusCode !== 200) {
-        throw new Error(`Error on response: ${response.statusMessage} | ${response.statusCode}`)
-    }
-
-    return response.body
 }
 
 interface Query {
