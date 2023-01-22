@@ -8,6 +8,9 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 const cheerio_1 = require("cheerio");
 const verifyCharacter = async (_key, charURI) => {
     const response = await (0, node_fetch_1.default)(charURI);
+    if (response.status !== 200) {
+        throw new Error('Invalid Character.');
+    }
     const page = await response.text();
     const $ = (0, cheerio_1.load)(page);
     const charBio = $.html('.character__selfintroduction');

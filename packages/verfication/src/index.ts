@@ -8,6 +8,11 @@ export interface Character {
 
 export const verifyCharacter = async (_key: string, charURI: string): Promise<Character> => {
     const response = await fetch(charURI)
+
+    if (response.status !== 200) {
+        throw new Error('Invalid Character.')
+    }
+
     const page = await response.text()
 
     const $ = load(page)
