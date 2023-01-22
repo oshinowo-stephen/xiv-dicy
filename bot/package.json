@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts"
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "start:dev": "ts-node ./src/index.ts",
+    "migrate": "prisma migrate"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "@aiueb/auth": "^1.0.0-alpha.0",
-    "@aiueb/fflogs": "^1.0.0-alpha.0",
+    "@aiueb/fflogs": "^1.0.1",
     "@aiueb/utils": "^1.0.0-alpha.0",
-    "@aiueb/verify": "^1.0.0-alpha.1",
+    "@aiueb/verify": "^1.0.3",
     "@hephaestus/eris": "^1.0.0-alpha.22",
+    "@prisma/client": "^4.9.0",
     "config": "^3.3.8"
   },
   "devDependencies": {

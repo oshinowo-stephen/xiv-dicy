@@ -1,29 +1,29 @@
 import { createCommand } from '@hephaestus/eris'
-import { verifyCharacter } from '@aiueb/verify'
-import { 
-    sleep, 
-    timeouts,
-    randomString, 
+
+import {
     createTimeout,
+    randomString,
+    timeouts,
+    deleteTimeout,
 } from '@aiueb/utils'
 
-const tryToVerify = async (key: string, url: string, tries: number): Promise<boolean> => {
+import { 
+    tryToVerify, 
+    storeCharacter,
+    fetchCharacter,
+    createPlayerIfNotExists,
+    isValidProfile,
+} from '../service'
+
+const isVerified = async (player: string, charURL: string): Promise<boolean> => {
     try {
-        await verifyCharacter(key, url)
+        await fetchCharacter(player, undefined, charURL)
 
         return true
     } catch(_error) {
-        const tryCount = tries + 1;
+        console.log(_error)
 
-        if (tryCount >= 10) {
-            return false
-        } else {
-            console.log(`error: ${_error}, tryCount: ${tryCount}`)
-
-            await sleep(5000)
-
-            return tryToVerify(key, url, tryCount)
-        }
+        return false
     }
 }
 
@@ -40,36 +40,72 @@ export default createCommand({
     ],
     description: 'Verify your characters!',
     action: async (interaction, args): Promise<void> => {
-        if (timeouts.has(interaction.member.id)) {
-            return interaction.createMessage({
-                content: 'You\'re in process of this command already! Try again later...',
-                flags: 64
-            })
-        }
+        if (timeouts.has(interaction.member.id)) return interaction.createMessage({
+            content: 'Hold on! This command is already in process!',
+            flags: 64
+        })
 
-        let tries: number = 0
-        const key = `aiuebxiv-${randomString(28)}`
+        const playerID = interaction.member.id
+        const character = args['char_link'].value
+
+        if (!isValidProfile(character)) return interaction.createMessage({
+            content: 'This isn\'t a valid character... Please try a different link',
+            flags: 64
+        })
+
+        const verified = await isVerified(playerID, character) 
+        await createPlayerIfNotExists(playerID)
+
+        if (verified) return interaction.createMessage({
+            content: 'You\'ve already verified this character silly UwU',
+            flags: 64
+        })
+
+        createTimeout(interaction.member.id, (50 * 1000))
+        const key: string = `lyralogs-${randomString(28)}`
 
         interaction.createMessage({
             content: `
-Key generated: \`${key}\`, paste this in your character bio!
-            `,
+Alright! Here's your key: \`${key}\`. 
+Please paste this in your character's profile!
+Found here: https://na.finalfantasyxiv.com/lodestone/my/setting/profile/
+`,
             flags: 64,
         })
 
-        createTimeout(interaction.member.id, (60 * 1000))
+        try {
+            const { name, world } = await tryToVerify(key, character, 0)
 
-        const verified = await tryToVerify(key, args['char_link'].value, tries)
-
-        if (!verified) {
-            await interaction.createMessage({
-                content: 'unable to verify character, reason: TIMED_OUT!',
-                flags: 64,
+            await storeCharacter(playerID, {
+                name,
+                world,
+                charURI: character
+            }).catch((err) => {
+                interaction.createMessage({
+                    content: `
+That might be a problem... Please report this to my master (<@229651386223034368>):
+\`\`\`
+${err}
+\`\`\` 
+                    `,
+                    flags: 64
+                })
             })
-        } else {
+
+            deleteTimeout(playerID)
+
             interaction.createMessage({
-                content: 'character is now verified, enjoy!',
+                content: `Validated: **"${name}"** from **"${world}"**`,
                 flags: 64
+            })
+        } catch (_error) {
+            console.log(_error)
+
+            deleteTimeout(playerID)
+
+            interaction.createMessage({
+                content: `Sorry but I was unable to verify this character, reason: \`${_error}\``,
+                flags: 64,
             })
         }
     }

@@ -8,6 +8,15 @@ datasource storage {
 }
 
 model Player {
-    id String @unique
-    verified_char String
+    id String @id
+    characters Character[]
+}
+
+model Character {
+    priority Int
+    world String
+    charURI String
+    playerID String
+    name String @unique 
+    player Player @relation(fields: [ playerID ], references: [ id ])
 }
