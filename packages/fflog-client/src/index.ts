@@ -78,6 +78,10 @@ interface ZoneRanking {
 interface Encounter {
     id: number
     name: string
+    bestSpec: string
+    totalKills: number
+    rankPercent: number
+    fastestKill: number
 }
 
 interface QueryRequest {

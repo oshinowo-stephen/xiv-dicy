@@ -21,5 +21,13 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
   "gitHead": "11695708fde5fd0c08f70dd9a0c80de35d199a21"
 }
