@@ -1,12 +1,7 @@
 import fetch from 'node-fetch'
 import { load } from 'cheerio'
 
-export interface Character {
-    name: string
-    world: string
-}
-
-export const verifyCharacter = async (_key: string, charURI: string): Promise<Character> => {
+export const verifyCharacter = async (_key: string, charURI: string): Promise<void> => {
     const response = await fetch(charURI)
 
     if (response.status !== 200) {
@@ -17,13 +12,5 @@ export const verifyCharacter = async (_key: string, charURI: string): Promise<Ch
 
     const $ = load(page)
     const charBio = $.html('.character__selfintroduction')
-    const charName = $.html('.frame__chara__name')
-    const charWorld = $.html('.frame__chara__world')
-
     if (!$(charBio).text().includes(_key)) throw new Error('Invalid Key.')
-
-    return {
-        name: $(charName).text(),
-        world: $(charWorld).text()
-    }
 }

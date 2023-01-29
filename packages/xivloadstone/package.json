@@ -1,0 +1,40 @@
+{
+  "name": "@aiueb/loadstone",
+  "version": "0.1.1",
+  "description": "A straight wrapper around the XIVAPI to pull character data.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "ava",
+    "build": "rm -rf ./dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oshinowo-stephen/fflogs-tracker.git"
+  },
+  "keywords": [
+    "xivapi",
+    "ffxiv",
+    "loadstone",
+    "characters"
+  ],
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "author": "oshinowo-stephen <kingstonicthe1@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oshinowo-stephen/fflogs-tracker/issues"
+  },
+  "homepage": "https://github.com/oshinowo-stephen/fflogs-tracker#readme",
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.2"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
