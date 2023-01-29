@@ -4,7 +4,9 @@ const BASE_URL: string = "https://xivapi.com/character"
 
 export interface CharacterDetails {
     name: string
+    world: string
     avatarUrl: string
+    dataCenter: string
     portraitUrl: string
 }
 
@@ -15,6 +17,8 @@ interface XIVApiResponse {
 interface XIVCharacter {
     Avatar: string
     Portrait: string
+    DC: string
+    Server: string
     Name: string
 }
 
@@ -29,7 +33,9 @@ export const getCharacter = async (id: string): Promise<CharacterDetails> => {
 
     const {
         Character: {
+            DC: dataCenter,
             Name: name,
+            Server: world,
             Avatar: avatarUrl,
             Portrait: portraitUrl,
         }
@@ -37,7 +43,9 @@ export const getCharacter = async (id: string): Promise<CharacterDetails> => {
 
     return {
         name,
+        world,
         avatarUrl,
+        dataCenter,
         portraitUrl,
     } as CharacterDetails
 }
