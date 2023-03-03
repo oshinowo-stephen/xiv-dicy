@@ -3,20 +3,38 @@ generator client {
 }
 
 datasource storage {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = "file:./storage.db"
+}
+
+model Guild {
+    id String @id
+    guideRoleID String
+    guides Guide[]
 }
 
 model Player {
     id String @id
+    guides Guide[]
     characters Character[]
 }
 
+model Guide {
+    id String @id
+    name String
+    group String
+    guildID String
+    owner String
+    player Player @relation(fields: [ owner ], references: [ id ])
+    guild Guild @relation(fields: [ guildID ], references: [ id ])
+}
+
 model Character {
-    priority Int
-    world String
+    name String
+    world String 
+    dcenter String
     charURI String
     playerID String
-    name String @unique 
+    charID String @id
     player Player @relation(fields: [ playerID ], references: [ id ])
 }

@@ -1,26 +1,26 @@
-import { join as __join, resolve } from 'path'
-process.env['NODE_CONFIG_DIR'] = resolve(process.cwd(), '../config')
 import { Hephaestus as Forge } from '@hephaestus/eris'
 import { loadTokenToEnv } from '@aiueb/auth'
 import { logger } from '@hephaestus/utils'
+import { join as __join } from 'path'
+import '@utils/loader'
 import config from 'config'
 
 const main = async (): Promise<void> => {
     await loadTokenToEnv()
 
-    const magician = new Forge(config.get('BOT_TOKEN'), {
+    const dicy = new Forge(config.get('BOT_TOKEN'), {
         intents: [
             'guilds',
             'guildMessages'
         ]
     })
 
-    magician.client.on('ready', () => {
+    dicy.client.on('ready', () => {
         logger.info('Client ready! Magician is now online!')
     })
 
-    magician.commands.forge(__join(__dirname, 'commands'))
-    await magician.connect()
+    dicy.commands.forge(__join(__dirname, 'commands'))
+    await dicy.connect()
     logger.info('App connecting to the DiscordAPI...')
 }
 

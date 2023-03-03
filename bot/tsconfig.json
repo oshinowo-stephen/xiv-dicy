@@ -1,12 +1,36 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "declaration": true
+    "ts-node": {
+        "require": [
+            "typescript-transform-paths/register"
+        ],
+        "transpileOnly": true
     },
-    "exclude": [
-        "node_modules"
-    ]
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
+        "noUnusedParameters": true,
+        "baseUrl": "./",
+        "paths": {
+            "@services/*": [
+                "./src/services/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ]
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths"
+            },
+            {
+                "transform": "typescript-transform-paths",
+                "afterDeclarations": true
+            }
+        ],
+        "outDir": "./dist"
+    }
 }
