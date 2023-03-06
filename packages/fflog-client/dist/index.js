@@ -31,6 +31,9 @@ const getCharZoneRanks = async (name, slug, region) => {
     if (response.statusCode !== 200) {
         throw new Error(`Error on request: ${response.statusMessage} | ${response.statusCode}`);
     }
+    if (!response.body.data.characterData.character) {
+        throw new Error('No logs found.');
+    }
     return response.body
         .data
         .characterData
