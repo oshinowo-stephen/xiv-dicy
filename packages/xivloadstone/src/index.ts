@@ -11,7 +11,12 @@ export interface CharacterDetails {
 }
 
 interface XIVApiResponse {
-    Character: XIVCharacter
+    readonly Character: XIVCharacter
+    readonly Results: SearchResults[]
+}
+
+interface SearchResults {
+    ID: string
 }
 
 interface XIVCharacter {
@@ -22,7 +27,21 @@ interface XIVCharacter {
     Name: string
 }
 
-export const getCharacter = async (id: string): Promise<CharacterDetails> => {
+export const getCharFromName = async (name: string, world: string): Promise<CharacterDetails> => {
+    const requestUrl = `${BASE_URL}/search?name=${name}&server=${world}`
+
+    const response = await fetch(requestUrl)
+
+    if (response.status !== 200) {
+        throw new Error(`Unable to fetch character details, reason: ${response.statusText} | ${response.status} `)
+    }
+
+    const { Results } = await response.json() as XIVApiResponse
+
+    return getCharFromID(Results[0].ID)
+}
+
+export const getCharFromID = async (id: string): Promise<CharacterDetails> => {
     const requestUrl = `${BASE_URL}/${id}`
 
     const response = await fetch(requestUrl)

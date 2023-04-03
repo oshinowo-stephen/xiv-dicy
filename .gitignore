@@ -76,12 +76,14 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# dev related things people don't know about
 .env
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
+secrets
+docker-compose.yml
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -93,6 +95,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
+bot/dist
 # dist
 
 # Gatsby files

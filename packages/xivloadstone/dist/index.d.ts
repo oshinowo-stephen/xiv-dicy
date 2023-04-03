@@ -5,4 +5,5 @@ export interface CharacterDetails {
     dataCenter: string;
     portraitUrl: string;
 }
-export declare const getCharacter: (id: string) => Promise<CharacterDetails>;
+export declare const getCharFromName: (name: string, world: string) => Promise<CharacterDetails>;
+export declare const getCharFromID: (id: string) => Promise<CharacterDetails>;

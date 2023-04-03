@@ -3,25 +3,36 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./dist/index.js",
-    "start:dev": "ts-node ./src/index.ts",
-    "migrate": "prisma migrate"
+    "build": "rm -rf ./dist && tsc",
+    "start": "ts-node-dev ./src/index.ts",
+    "prepare": "ts-patch install -s"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "@aiueb/auth": "^1.0.0-alpha.0",
-    "@aiueb/fflogs": "^1.0.1",
+    "@aiueb/fflogs": "^1.1.1",
+    "@aiueb/loadstone": "^0.1.2",
     "@aiueb/utils": "^1.0.0-alpha.0",
-    "@aiueb/verify": "^1.0.3",
+    "@aiueb/verify": "^1.1.1",
     "@hephaestus/eris": "^1.0.0-alpha.22",
-    "@prisma/client": "^4.9.0",
-    "config": "^3.3.8"
+    "@prisma/client": "^4.11.0",
+    "config": "^3.3.8",
+    "docker-secret-env": "^0.2.1",
+    "eris": "^0.17.1",
+    "format-duration": "^3.0.2",
+    "redis": "^4.6.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",
-    "prisma": "^4.8.1"
+    "@types/moment": "^2.13.0",
+    "dotenv": "^16.0.3",
+    "prisma": "^4.11.0",
+    "ts-node-dev": "^2.0.0",
+    "ts-patch": "^2.1.0",
+    "typescript-transform-paths": "^3.4.6"
   }
 }
