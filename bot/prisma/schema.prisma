@@ -4,12 +4,13 @@ generator client {
 
 datasource storage {
     provider = "sqlite"
-    url      = "file:./storage.db"
+    url      = "file:../../storage/bot.db"
 }
 
 model Guild {
     id String @id
     guideRoleID String
+    vCharsRoleID String
     guides Guide[]
 }
 

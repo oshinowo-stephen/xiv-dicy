@@ -1,271 +1,165 @@
-import { ComponentInteraction } from 'eris'
 import { getCharZoneRanks } from '@aiueb/fflogs'
 import { createCommand } from '@hephaestus/eris'
+// import { logger } from '@hephaestus/utils'
 
 import duration from 'format-duration'
 
-import { mapDCToRegion } from '@utils/gimmick'
+import { mapDCToRegion, setState } from '@utils/gimmick'
+import { fetch as fetchPlayer, PlayerState, PLAYER_REGEX } from '@services/player'
 import { fetchAllFromPlayer, fetchLoadstoneInfo } from '@services/character'
+import { EmbedField } from 'eris'
+import { timeouts, createTimeout, deleteTimeout } from '@aiueb/utils'
 
 export default createCommand({
     type: 1,
     name: 'list',
-    description: 'List your or other\'s... character\'s clears and performance!',
     options: [
         {
             type: 3,
+            name: 'player',
+            description: 'Player\'s ID or simply @ em\'',
             required: false,
-            name: 'member',
-            description: 'the person you wanna see'
         }
-    ], 
-    action: async (interaction, args, { client }) => {
+    ],
+    description: 'List characters\' clears and performance!',
+    action: async (interaction, args) => {
         let playerID = interaction.member.id
+        const target = args['player'] !== undefined
+            ? args['player'].value
+            : undefined
 
-        if (args['member']) {
-            playerID = args['member'].value
+        if (timeouts.has(interaction.member.id)) {
+            return interaction.createMessage({
+                content: 'This command is already in action, please wait.',
+                flags: 64
+            })
         }
 
-        console.log(playerID)
+        createTimeout(interaction.member.id, 5)
 
-        const characters = await fetchAllFromPlayer(playerID)
+        if (target !== undefined && !PLAYER_REGEX.test(target)) {
+            deleteTimeout(interaction.member.id)
 
-        let currentPage: number = 0
-        let currentCharacter = characters[currentPage]
+            return interaction.createMessage({
+                content: 'Invalid Player: ' + target + '.',
+                flags: 64
+            })
+        }
 
-        console.log(characters)
+        if ((await fetchPlayer(playerID)) === undefined) {
+            return interaction.createMessage({
+                content: 'Try adding a character first.',
+                flags: 64
+            })
+        }
 
-        const {
-            name,
-            world,
-            avatarUrl,
-            dataCenter,
-            // portraitUrl,
-        } = await fetchLoadstoneInfo(currentCharacter.charURI)
+        if (target !== undefined) {
+            playerID = PLAYER_REGEX.exec(target)[1]
+        }
+
+        await setState<PlayerState>({
+            user: interaction.member.id,
+            data: {
+                args: playerID,
+                currentPage: 0
+            }
+        })
+
 
         try {
-            const zoneRanks = await getCharZoneRanks(name, world, mapDCToRegion(dataCenter))
+            const characters = await fetchAllFromPlayer(playerID)
 
-            client.on('interactionCreate', async (interacted) => {
-                if (!(interacted instanceof ComponentInteraction)) return
+            console.log(characters)
 
-                if (interacted.data.component_type === 2) {
-                    console.log('clicked a button')
+            const { 
+                name,
+                world,
+                avatarUrl,
+                dataCenter: dcenter,
+            } = await fetchLoadstoneInfo([characters[0].charURI])  
 
-                    if (interacted.data.custom_id === 'next-page') {
-                        console.log('clicked next page')
-                        // interacted.message.embeds
-
-                        currentPage = currentPage === characters.length
-                            ? characters.length
-                            : currentPage + 1
-                        
-
-                        currentCharacter = characters[currentPage]
-                        console.log(currentPage)
-                        console.log(currentCharacter)
-
-                        const {
-                            name,
-                            world,
-                            avatarUrl,
-                            dataCenter,
-                            // portraitUrl,
-                        } = await fetchLoadstoneInfo(currentCharacter.charURI)
-
-                        console.log(name, world, mapDCToRegion(dataCenter))
-
-                        try {
-                         const zoneRanks = await getCharZoneRanks(name, world, mapDCToRegion(dataCenter))
-                            
-                        interacted.editParent({
-                embeds: [
-                    {
-                        title: `${name} in ${world} | ${dataCenter}`,
-                        fields: zoneRanks.map((zone) => {
-                            return {
-                                name: `${zone.encounter.name} | ${zone.totalKills > 0 ? '✔️' : '🚫'}`,
-                                value: zone.totalKills > 0 ? `
-    Best kill on: ${zone.bestSpec}!
-    Current ranking: ${zone.rankPercent}
-    Fastest kill time: ${duration(zone.fastestKill)}
-    Cleared ${zone.totalKills === 1 ? 'Once' : `${zone.totalKills} times`}!
-                                `
-                                :
-                                'Didn\'t cleared yet... it seems...'
-                            }
-                        }),
-                        thumbnail: {
-                            url: avatarUrl,
-                        }
-                    }
-                ],
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                label: '❌',
-                                custom_id: 'exit',
-                                style: 4,
-                            },
-                            {
-                                type: 2,
-                                label: '⬅️',
-                                custom_id: 'previous-page',
-                                style: 1,
-                            },
-                            {
-                                type: 2,
-                                label: '➡️',
-                                custom_id: 'next-page',
-                                style: 1
-                            }
-                        ]
-                    }
-                ],
-                        })                           
-                        } catch (_error) {
-                            if (_error instanceof TypeError) {
-                                interacted.createMessage({
-                                    content: `${name} on ${world} | ${dataCenter}, doesn't seem to have any instances on their record.`,
-                                    flags: 64
-                                })
-                            }
-                        }
-
-                    } else if (interacted.data.custom_id === 'exit') {
-
-                        currentCharacter = characters[currentPage]
-
-                        interacted.editParent({
-                            embeds: interacted.message.embeds
-                        })
-
-                    } else if (interacted.data.custom_id === 'previous-page') {
-                        currentPage = currentPage === 0
-                            ? currentPage
-                            : currentPage - 1
-                        currentCharacter = characters[currentPage]
-
-                        const {
-                            name,
-                            world,
-                            avatarUrl,
-                            dataCenter,
-                            // portraitUrl,
-                        } = await fetchLoadstoneInfo(currentCharacter.charURI)
-
-                        const zoneRanks = await getCharZoneRanks(name, world, mapDCToRegion(dataCenter))
-                       
-                        interacted.editParent({
-                embeds: [
-                    {
-                        title: `${name} in ${world} | ${dataCenter}`,
-                        fields: zoneRanks.map((zone) => {
-                            return {
-                                name: `${zone.encounter.name} | ${zone.totalKills > 0 ? '✔️' : '🚫'}`,
-                                value: zone.totalKills > 0 ? `
-    Best kill on: ${zone.bestSpec}!
-    Current ranking: ${zone.rankPercent}
-    Fastest kill time: ${duration(zone.fastestKill)}
-    Cleared ${zone.totalKills === 1 ? 'Once' : `${zone.totalKills} times`}!
-                                `
-                                :
-                                'Didn\'t cleared yet... it seems...'
-                            }
-                        }),
-                        thumbnail: {
-                            url: avatarUrl,
-                        }
-                    }
-                ],
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                label: '❌',
-                                custom_id: 'exit',
-                                style: 4,
-                            },
-                            {
-                                type: 2,
-                                label: '⬅️',
-                                custom_id: 'previous-page',
-                                style: 1,
-                            },
-                            {
-                                type: 2,
-                                label: '➡️',
-                                custom_id: 'next-page',
-                                style: 1
-                            }
-                        ]
-                    }
-                ],
-                        })
-                        
-
-                    } else {
-
-                    }
-                }
-            })
+            const ranks = await getCharZoneRanks(name, world, mapDCToRegion(dcenter))
 
             await interaction.createMessage({
                 embeds: [
                     {
-                        title: `${name} in ${world} | ${dataCenter}`,
-                        fields: zoneRanks.map((zone) => {
-                            return {
-                                name: `${zone.encounter.name} | ${zone.totalKills > 0 ? '✔️' : '🚫'}`,
-                                value: zone.totalKills > 0 ? `
-    Best kill on: ${zone.bestSpec}!
-    Current ranking: ${zone.rankPercent}
-    Fastest kill time: ${duration(zone.fastestKill)}
-    Cleared ${zone.totalKills === 1 ? 'Once' : `${zone.totalKills} times`}!
-                                `
-                                :
-                                'Didn\'t cleared yet... it seems...'
-                            }
-                        }),
+                        title: `${name} | ${world}, ${dcenter}`,
+                        fields: [
+                            ...ranks.map(({
+                                encounter,
+                                rankPercent,
+                                bestSpec,
+                                fastestKill,
+                                totalKills
+                            }) => {
+                                return {
+                                    name: `${encounter.name} | ${totalKills !== 0 ? '✅' : '⛔'}`,
+                                    value: totalKills !== 0
+                                        ? `
+                                        You've done your best with: ${bestSpec},
+                                        clearing ${totalKills <= 1 ? 'once' : `${totalKills} times`} with a (${rankPercent}%),
+                                        and **\`${duration(fastestKill)}\`** being your fastest!
+                                        `
+                                        : 'It seems that you\'re too weak.',
+                                } as EmbedField
+                           }) 
+                        ],
                         thumbnail: {
-                            url: avatarUrl,
+                            url: avatarUrl
+                        },
+                        image: {
+                            url: 'https://ffxiv.consolegameswiki.com/mediawiki/images/6/66/Abyssos_The_Eighth_Circle.png'
                         }
                     }
                 ],
-                components: [
+                components: characters.length > 1 ? [
                     {
                         type: 1,
                         components: [
                             {
                                 type: 2,
-                                label: '❌',
-                                custom_id: 'exit',
-                                style: 4,
-                            },
-                            {
-                                type: 2,
-                                label: '⬅️',
-                                custom_id: 'previous-page',
+                                label: '◀️',
+                                custom_id: 'ipn-left',
                                 style: 1,
                             },
                             {
                                 type: 2,
-                                label: '➡️',
-                                custom_id: 'next-page',
-                                style: 1
+                                label: '▶️',
+                                custom_id: 'ipn-right',
+                                style: 1,
+                            },
+                            {
+                                type: 2,
+                                label: '🚫',
+                                custom_id: 'ipn-exit',
+                                style: 4,
                             }
                         ]
                     }
-                ],
-                flags: 64
+                ] : 
+                [],
+                flags: 64,
             })
         } catch (_error) {
             console.log(_error)
+
+            if (_error.message === 'No logs found.') {
+                return interaction.createMessage({
+                    content: 'No logs presented for this player!',
+                    flags: 64
+                })
+            } else {
+                return interaction.createMessage({
+                    content: `
+Unable to return a valid response, reason being:
+\`\`\`
+${_error.message}
+\`\`\`
+Please report this to: Stonic#9086
+                    `,
+                    flags: 64
+                })
+            }
         }
     }
 })

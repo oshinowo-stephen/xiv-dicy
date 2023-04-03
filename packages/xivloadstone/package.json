@@ -1,7 +1,8 @@
 {
   "name": "@aiueb/loadstone",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A straight wrapper around the XIVAPI to pull character data.",
+  "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "scripts": {
     "test": "ava",

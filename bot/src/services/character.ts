@@ -5,20 +5,29 @@ import {
 } from '@prisma/client'
 import { logger } from '@hephaestus/utils'
 import {
-    getCharacter,
+    getCharFromName,
     CharacterDetails as LoadstoneDetails,
+    getCharFromID,
 } from '@aiueb/loadstone'
 import { sleep } from '@aiueb/utils'
 
 import { URL } from 'url'
 
 const storage: PrismaClient = new PrismaClient()
-// const PROFILE_REGEX: RegExp = /https:\/\/na\.finalfantasyxiv\.com\/lodestone\/character\/([0-9]+)\//gm
+export const PROFILE_REGEX: RegExp = /https:\/\/na\.finalfantasyxiv\.com\/lodestone\/character\/([0-9]+)\//gm
 
 export const store = async (character: Character): Promise<void> => {
     await storage.character.create({
         data: {
             ...character
+        }
+    })
+}
+
+export const remove = async (character: Character): Promise<void> => { 
+    await storage.character.delete({
+        where: {
+            charID: character.charID
         }
     })
 }
@@ -38,20 +47,22 @@ export const fetchAllFromPlayer = async (playerID: string): Promise<Character[]>
         }
     })
 
-export const fetchLoadstoneInfo = async (loadstoneURL: string): Promise<LoadstoneDetails> => {
-    const { pathname } = new URL(loadstoneURL)
+export const fetchLoadstoneInfo = async (params: [string, string?]): Promise<LoadstoneDetails> => {
+    if (params[1] === undefined) {
+        const { pathname } = new URL(params[0])
+        const charID = pathname.split('/').filter((str) => str.length !== 0)[2]
 
-    console.log(pathname.split('/').filter((str) => str.length !== 0))
+        console.log(charID)
 
-    const charID = pathname.split('/').filter((str) => str.length !== 0)[2]
-
-    console.log(loadstoneURL)
-    console.log(charID)
-
-    if (charID.length >= 1) {
-        return (await getCharacter(charID)) as LoadstoneDetails
+        if (charID.length >= 1) {
+            return (await getCharFromID(charID)) as LoadstoneDetails
+        } else {
+            throw new Error('don\'t know what to do this')
+        }
     } else {
-        throw new Error('don\'t know what to do this')
+        console.log(params)
+
+        return (await getCharFromName(params[0], params[1])) as LoadstoneDetails
     }
 }
 

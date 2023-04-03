@@ -9,9 +9,11 @@ const main = async (): Promise<void> => {
     await loadTokenToEnv()
 
     const dicy = new Forge(config.get('BOT_TOKEN'), {
+        maxShards: 'auto',
+        getAllUsers: false,
         intents: [
             'guilds',
-            'guildMessages'
+            'guildMessages',
         ]
     })
 
@@ -19,7 +21,12 @@ const main = async (): Promise<void> => {
         logger.info('Client ready! Magician is now online!')
     })
 
+    dicy.client.on('shardReady', (shard) => {
+        logger.info('client shard - {', shard, '} is now ready to go!')
+    })
+
     dicy.commands.forge(__join(__dirname, 'commands'))
+    dicy.events.forge(__join(__dirname, 'events'))
     await dicy.connect()
     logger.info('App connecting to the DiscordAPI...')
 }
