@@ -69,8 +69,6 @@ export default createCommand({
         try {
             const characters = await fetchAllFromPlayer(playerID)
 
-            console.log(characters)
-
             const { 
                 name,
                 world,

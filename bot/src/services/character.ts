@@ -52,16 +52,12 @@ export const fetchLoadstoneInfo = async (params: [string, string?]): Promise<Loa
         const { pathname } = new URL(params[0])
         const charID = pathname.split('/').filter((str) => str.length !== 0)[2]
 
-        console.log(charID)
-
         if (charID.length >= 1) {
             return (await getCharFromID(charID)) as LoadstoneDetails
         } else {
             throw new Error('don\'t know what to do this')
         }
     } else {
-        console.log(params)
-
         return (await getCharFromName(params[0], params[1])) as LoadstoneDetails
     }
 }
@@ -81,7 +77,6 @@ export const tryToVerify = (character: string, key: string, tryCount: number = 0
             .catch((err) => {
                 if (err) logger.error('Unable to verify character, reason: ', err)
 
-                console.log(tryCount)
                 if ((tryCount + 1) >= 10) {
                     return reject('Maximum tries reached.')
                 }

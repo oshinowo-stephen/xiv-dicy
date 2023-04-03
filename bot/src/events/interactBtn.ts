@@ -14,31 +14,28 @@ const event: Event = {
     handler: async (interaction) => {
         if (interaction instanceof ComponentInteraction) {
             if (interaction.data.component_type === 2) {
-                const {
-                    args,
-                    currentPage
-                } = await getState<PlayerState>(interaction.member.id)
+                const state = await getState<PlayerState>(interaction.member.id)
 
                 const characters = await fetchAllFromPlayer(
-                    args === undefined 
+                    !state.args
                         ? interaction.member.id 
-                        : args
+                        : state.args
                 )
 
-                if ((currentPage - 1) >= 0 && interaction.data.custom_id === 'ipn-left') {
+                if ((state.currentPage - 1) >= 0 && interaction.data.custom_id === 'ipn-left') {
                     await setState({
                         user: interaction.member.id,
                         data: {
-                            args,
-                            currentPage: currentPage - 1
+                            args: state.args,
+                            currentPage: state.currentPage - 1
                         }
                     })
-                } else if ((currentPage + 1) < characters.length && interaction.data.custom_id === 'ipn-right') {
+                } else if ((state.currentPage + 1) < characters.length && interaction.data.custom_id === 'ipn-right') {
                     await setState({
                         user: interaction.member.id,
                         data: {
-                            args,
-                            currentPage: currentPage + 1
+                            args: state.args,
+                            currentPage: state.currentPage + 1
                         }
                     })
                 } else if (interaction.data.custom_id === 'ipn-exit') {
@@ -52,11 +49,7 @@ const event: Event = {
                     return
                 }
 
-                const {
-                    currentPage: pageNumber
-                } = await getState<PlayerState>(interaction.member.id)
-
-                console.log(pageNumber)
+                const { currentPage: pageNumber } = await getState<PlayerState>(interaction.member.id)
 
                 const { charURI } = characters[pageNumber]
 

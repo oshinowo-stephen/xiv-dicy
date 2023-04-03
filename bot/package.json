@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "prestart": "npm run build",
     "build": "rm -rf ./dist && tsc",
-    "start": "ts-node-dev ./src/index.ts",
-    "prepare": "ts-patch install -s"
+    "start": "node ./dist/index.js",
+    "prepare": "ts-patch install -s",
+    "start:dev": "ts-node-dev ./src/index.ts"
   },
   "author": "",
   "license": "ISC",

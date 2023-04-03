@@ -18,11 +18,7 @@ const main = async (): Promise<void> => {
     })
 
     dicy.client.on('ready', () => {
-        logger.info('Client ready! Magician is now online!')
-    })
-
-    dicy.client.on('shardReady', (shard) => {
-        logger.info('client shard - {', shard, '} is now ready to go!')
+        logger.info(`${dicy.client.user.username} is now online!`)
     })
 
     dicy.commands.forge(__join(__dirname, 'commands'))
