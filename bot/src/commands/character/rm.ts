@@ -1,7 +1,5 @@
-import { logger } from '@hephaestus/utils'
 import { createCommand } from '@hephaestus/eris'
 
-import { remove as removePlayer } from '@services/player'
 import { fetchAllFromPlayer, remove as removeCharacter } from '@services/character'
 
 export default createCommand({
@@ -51,7 +49,9 @@ export default createCommand({
                     flags: 64
                 })
             }
-        
+       
+            console.log(characters)
+
             const character = characters.find((char) => 
                 char.name.toLowerCase() === name.toLowerCase() && 
                 char.world.toLowerCase() === world.toLowerCase())
@@ -60,14 +60,6 @@ export default createCommand({
 
             if (character !== undefined) {
                 await removeCharacter(character)
-
-                const characters = await fetchAllFromPlayer(player)
-
-                if (characters.length === 0) {
-                    logger.warn('Removing player no more characters in his profile!')
-
-                    await removePlayer(player)
-                }
 
                 await interaction.createMessage({
                     content: `Successfully removed character: ${character.name} | ${world}`,

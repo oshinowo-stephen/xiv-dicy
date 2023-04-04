@@ -36,6 +36,7 @@ export default createCommand({
         }
 
         createTimeout(interaction.member.id, 5)
+        console.log(target)
 
         if (target !== undefined && !PLAYER_REGEX.test(target)) {
             deleteTimeout(interaction.member.id)
@@ -46,14 +47,8 @@ export default createCommand({
             })
         }
 
-        if ((await fetchPlayer(playerID)) === undefined) {
-            return interaction.createMessage({
-                content: 'Try adding a character first.',
-                flags: 64
-            })
-        }
-
         if (target !== undefined) {
+            console.log(PLAYER_REGEX.exec(target))
             playerID = PLAYER_REGEX.exec(target)[1]
         }
 
@@ -68,6 +63,13 @@ export default createCommand({
 
         try {
             const characters = await fetchAllFromPlayer(playerID)
+
+            if (characters.length === 0 || (await fetchPlayer(playerID)) === undefined) {
+                return interaction.createMessage({
+                    content: `No profile or characters found for user: <@${playerID}>`,
+                    flags: 64
+                })
+            }
 
             const { 
                 name,

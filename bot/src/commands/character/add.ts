@@ -1,5 +1,5 @@
 import { createCommand } from '@hephaestus/eris'
-import { logger } from '@hephaestus/utils'
+// import { logger } from '@hephaestus/utils'
 
 import { 
     timeouts,
@@ -85,6 +85,13 @@ https://shorturl.at/svyFZ
             } catch (_error) {
                 deleteTimeout(player)
 
+                if (_error.message === 'Already verified!') {
+                    return interaction.createMessage({
+                        content: 'This character is already part of a profile!',
+                        flags: 64
+                    })
+                }
+
                 console.log(_error)
             }
 
@@ -121,7 +128,7 @@ https://shorturl.at/svyFZ
                 })
             }
 
-            logger.error(_error)
+            console.log(_error)
         }
     } 
 })
