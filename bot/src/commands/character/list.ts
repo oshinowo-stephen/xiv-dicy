@@ -36,7 +36,6 @@ export default createCommand({
         }
 
         createTimeout(interaction.member.id, 5)
-        console.log(target)
 
         if (target !== undefined && !PLAYER_REGEX.test(target)) {
             deleteTimeout(interaction.member.id)
@@ -59,7 +58,6 @@ export default createCommand({
                 currentPage: 0
             }
         })
-
 
         try {
             const characters = await fetchAllFromPlayer(playerID)

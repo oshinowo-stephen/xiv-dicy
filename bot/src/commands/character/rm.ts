@@ -37,9 +37,6 @@ export default createCommand({
         const world = args['world'].value
         const player = interaction.member.id
 
-        console.log(name)
-        console.log(world)
-
         try {
             const characters = await fetchAllFromPlayer(player)
 
@@ -50,13 +47,9 @@ export default createCommand({
                 })
             }
        
-            console.log(characters)
-
             const character = characters.find((char) => 
                 char.name.toLowerCase() === name.toLowerCase() && 
                 char.world.toLowerCase() === world.toLowerCase())
-
-            console.log(character)
 
             if (character !== undefined) {
                 await removeCharacter(character)

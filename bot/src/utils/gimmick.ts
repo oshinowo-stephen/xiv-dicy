@@ -2,13 +2,28 @@ import { Member } from 'eris'
 import { logger } from '@hephaestus/utils'
 
 import { createClient } from 'redis'
+import config from 'config'
+
+const { NODE_ENV } = process.env
 
 interface UserState<T> {
     user: string
     data: T
 }
 
-const client = createClient()
+const client = createClient({
+    password: NODE_ENV !== 'prod'
+        ? undefined
+        : config.get('REDIS_PASSWORD'),
+    socket: {
+        host: NODE_ENV !== 'prod'
+            ? undefined
+            : 'cache',
+        port: NODE_ENV !== 'prod'
+            ? 6379
+            : config.get('REDIS_PORT')
+    }
+})
 
 export async function setState<T>(state: UserState<T>) {
     await client.set(state.user, JSON.stringify(state.data))

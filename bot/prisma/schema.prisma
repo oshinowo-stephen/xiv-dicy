@@ -34,8 +34,7 @@ model Character {
     name String
     world String 
     dcenter String
-    charURI String
+    charURI String @id
     playerID String
-    charID String @id
     player Player @relation(fields: [ playerID ], references: [ id ])
 }
