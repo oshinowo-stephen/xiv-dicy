@@ -8,14 +8,11 @@
 
 - You may fetch character data that is already presented in fflogs by doing the following:
 `/characters get <CHARACTER_NAME> <CHARACTER_WORLD>`
-![HOW_TO_GET_CHARACTER](./images/)
 
 - You can add your characters for easy access:
-![HOW_TO_ADD_CHARACTER](./images/)
 `/characters add <LOADSTONE_URL>`
 
 - You may list your and other players' character progress:
-![HOW_TO_LIST_O_CHARACTERS](./images)
 `/characters list` or `/characters list <@MEMBER>`
 
 ## Why would I make such a thing?
