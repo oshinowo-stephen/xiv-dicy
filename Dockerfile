@@ -2,8 +2,6 @@ FROM node:alpine AS docker_build
 
 WORKDIR /usr/builds/xiv-dicy
 
-ENV DATABASE_URL=file:storage/dicy.db
-
 COPY bot/dist ./dist/
 COPY config/prod.ts ./config/
 COPY bot/package-lock.json bot/package.json ./
