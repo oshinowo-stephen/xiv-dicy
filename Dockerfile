@@ -11,7 +11,7 @@ RUN npm i -g npm
 RUN npm ci --omit=dev --ignore-scripts --legacy-peer-deps
 RUN npx prisma migrate dev --name staging --schema ./prisma/schema.prod.prisma
 
-FROM alpine:3.18.3
+FROM alpine:3.18.5
 
 WORKDIR /usr/apps/xiv-dicy
 
